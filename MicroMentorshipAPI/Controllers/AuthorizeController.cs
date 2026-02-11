@@ -43,5 +43,25 @@ namespace MicroMentorshipAPI.Controllers
             var refreshToken = _tokenService.GenerateRefreshToken(dbUser.Id);
             return Ok(new TokenModel { Token = token, RefreshToken = refreshToken });
         }
+
+        ///<summary>
+        ///Refresh Token
+        ///</summary>
+        [HttpPost("refresh")]
+        public async Task<IActionResult> Refresh(TokenModel tokenModel)
+        {
+            var refreshToken = await _tokenService.GetRefreshToken(tokenModel.RefreshToken);
+            if(refreshToken == null)
+                return Unauthorized("Invalid Token");
+
+            var user = await _authorizeProcessor.GetUserById(refreshToken.UserId);
+            if (user == null)
+                return Unauthorized("Invalid Token");
+            var newAccessToken = _tokenService.GenerateAccessToken(user);
+            var newRefreshToken = _tokenService.GenerateRefreshToken(user.Id);
+
+            _tokenService.RevokeRefreshToken(tokenModel.RefreshToken);
+            return Ok(new TokenModel { Token = newAccessToken, RefreshToken = newRefreshToken });
+        }
     }
 }

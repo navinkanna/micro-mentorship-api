@@ -25,5 +25,9 @@ namespace MicroMentorshipAPI.Processors
             var result = await _context.SaveChangesAsync();
             return result > 0;
         }
+        internal async Task<User> GetUserById(int userId)
+        {
+            return await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
+        }
     }
 }
