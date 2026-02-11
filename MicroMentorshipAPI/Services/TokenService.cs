@@ -56,7 +56,7 @@ namespace MicroMentorshipAPI.Services
 
             return refreshToken;
         }
-        public RefreshToken GetRefreshToken(string refreshToken)
+        public async Task<RefreshToken> GetRefreshToken(string refreshToken)
         {
             return _context.RefreshTokens.FirstOrDefault(rt => rt.RefreshUserToken == refreshToken);
         }

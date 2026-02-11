@@ -1,5 +1,7 @@
 
 using MicroMentorshipAPI.Data;
+using MicroMentorshipAPI.Processors;
+using MicroMentorshipAPI.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi;
@@ -24,6 +26,10 @@ builder.Services.AddSwaggerGen(options =>
         Version = "v1"
     });
 });
+//Register Services
+builder.Services.AddScoped<TokenService>();
+//Register Processors
+builder.Services.AddScoped<AuthorizeProcessor>();
 //Register AppDBContext
 builder.Services.AddDbContext<AppDBContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("postgreConnection")));
