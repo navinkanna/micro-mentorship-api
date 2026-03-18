@@ -1,7 +1,6 @@
-﻿using MicroMentorshipAPI.Models;
+using MicroMentorshipAPI.Models;
 using MicroMentorshipAPI.Processors;
 using MicroMentorshipAPI.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MicroMentorshipAPI.Controllers
@@ -18,9 +17,7 @@ namespace MicroMentorshipAPI.Controllers
             _authorizeProcessor = authorizeProcessor;
             _tokenService = tokenService;
         }
-        ///<summary>
-        ///Register User
-        ///</summary>
+
         [HttpPost("register")]
         public async Task<IActionResult> Register(User user)
         {
@@ -30,9 +27,6 @@ namespace MicroMentorshipAPI.Controllers
             return BadRequest(result);
         }
 
-        ///<summary>
-        ///Login User
-        ///</summary>
         [HttpPost("login")]
         public async Task<IActionResult> Login(User user)
         {
@@ -44,14 +38,11 @@ namespace MicroMentorshipAPI.Controllers
             return Ok(new TokenModel { Token = token, RefreshToken = refreshToken });
         }
 
-        ///<summary>
-        ///Refresh Token
-        ///</summary>
         [HttpPost("refresh")]
         public async Task<IActionResult> Refresh(TokenModel tokenModel)
         {
             var refreshToken = await _tokenService.GetRefreshToken(tokenModel.RefreshToken);
-            if(refreshToken == null)
+            if (refreshToken == null)
                 return Unauthorized("Invalid Token");
 
             var user = await _authorizeProcessor.GetUserById(refreshToken.UserId);

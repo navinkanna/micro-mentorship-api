@@ -1,4 +1,4 @@
-﻿using MicroMentorshipAPI.Models;
+using MicroMentorshipAPI.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace MicroMentorshipAPI.Data
@@ -8,6 +8,7 @@ namespace MicroMentorshipAPI.Data
         public AppDBContext(DbContextOptions<AppDBContext> options) : base(options) { }
         public DbSet<User> Users { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
+        public DbSet<Profile> Profiles { get; set; }
 
     }
 }
