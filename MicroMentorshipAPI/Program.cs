@@ -9,10 +9,7 @@ using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
@@ -26,15 +23,23 @@ builder.Services.AddSwaggerGen(options =>
         Version = "v1"
     });
 });
-//Register Services
+
 builder.Services.AddScoped<TokenService>();
-//Register Processors
 builder.Services.AddScoped<AuthorizeProcessor>();
-//Register AppDBContext
+builder.Services.AddScoped<ProfileProcessor>();
 builder.Services.AddDbContext<AppDBContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("postgreConnection")));
 
-// Enable jwt token
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("UiDev", policy =>
+    {
+        policy.WithOrigins("http://localhost:4200")
+        .AllowAnyHeader()
+        .AllowAnyMethod();
+    });
+});
+
 var _authkey = builder.Configuration.GetValue<String>("JwtSettings:securityKey");
 builder.Services.AddAuthentication(item =>
 {
@@ -57,12 +62,13 @@ builder.Services.AddAuthentication(item =>
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCors("UiDev");
 
 app.UseHttpsRedirection();
 
