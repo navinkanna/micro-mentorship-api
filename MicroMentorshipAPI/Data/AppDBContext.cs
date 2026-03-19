@@ -9,6 +9,7 @@ namespace MicroMentorshipAPI.Data
         public DbSet<User> Users { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
         public DbSet<Profile> Profiles { get; set; }
-
+        public DbSet<ChatSession> ChatSessions { get; set; }
+        public DbSet<ChatMessage> ChatMessages { get; set; }
     }
 }
