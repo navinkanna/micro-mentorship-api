@@ -39,18 +39,19 @@ var postgresConnectionString = GetRequiredConfigurationValue(
 var jwtSecurityKey = GetRequiredConfigurationValue(
     builder.Configuration,
     "JwtSettings:securityKey");
+var allowedOrigins = GetAllowedOrigins(builder.Configuration);
 
 builder.Services.AddDbContext<AppDBContext>(options =>
     options.UseNpgsql(postgresConnectionString));
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("UiDev", policy =>
+    options.AddPolicy("UiClients", policy =>
     {
-        policy.WithOrigins("http://localhost:4200")
-        .AllowAnyHeader()
-        .AllowAnyMethod()
-        .AllowCredentials();
+        policy.WithOrigins(allowedOrigins)
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
     });
 });
 
@@ -96,7 +97,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseCors("UiDev");
+app.UseCors("UiClients");
 
 app.UseHttpsRedirection();
 
@@ -121,4 +122,17 @@ static string GetRequiredConfigurationValue(IConfiguration configuration, string
     throw new InvalidOperationException(
         $"Missing required configuration value '{key}'. " +
         "Use ASP.NET Core user secrets for local development or environment variables for deployment.");
+}
+
+static string[] GetAllowedOrigins(IConfiguration configuration)
+{
+    var configuredOrigins = configuration["Cors:AllowedOrigins"];
+
+    if (string.IsNullOrWhiteSpace(configuredOrigins))
+    {
+        return ["http://localhost:4200"];
+    }
+
+    return configuredOrigins
+        .Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
 }
