@@ -17,6 +17,7 @@ For production hosting, set environment variables instead:
 ```text
 JwtSettings__securityKey=replace-with-a-long-random-secret
 ConnectionStrings__postgreConnection=Host=...;Port=5432;Database=...;Username=...;Password=...;SSL Mode=Require;Trust Server Certificate=true
+Cors__AllowedOrigins=https://your-site.pages.dev,https://your-custom-domain.com
 ```
 
 ASP.NET Core maps double underscores in environment variables to nested configuration keys.
