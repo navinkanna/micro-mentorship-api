@@ -3,7 +3,9 @@ using MicroMentorshipAPI.Hubs;
 using MicroMentorshipAPI.Data;
 using MicroMentorshipAPI.Services;
 using MicroMentorshipAPI.Processors;
+using MicroMentorshipAPI.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi;
 using Microsoft.IdentityModel.Tokens;
@@ -31,6 +33,7 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddScoped<TokenService>();
 builder.Services.AddScoped<AuthorizeProcessor>();
 builder.Services.AddScoped<ProfileProcessor>();
+builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 builder.Services.AddSingleton<ChatMatchService>();
 
 var postgresConnectionString = GetRequiredConfigurationValue(
