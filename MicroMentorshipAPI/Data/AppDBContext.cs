@@ -11,5 +11,6 @@ namespace MicroMentorshipAPI.Data
         public DbSet<Profile> Profiles { get; set; }
         public DbSet<ChatSession> ChatSessions { get; set; }
         public DbSet<ChatMessage> ChatMessages { get; set; }
+        public DbSet<ChatFeedback> ChatFeedback { get; set; }
     }
 }

@@ -12,5 +12,6 @@ namespace MicroMentorshipAPI.Models
         public string Expertise { get; set; } = string.Empty;
         public string Industry { get; set; } = string.Empty;
         public string Topics { get; set; } = string.Empty;
+        public int HelpfulFeedbackCount { get; set; }
     }
 }

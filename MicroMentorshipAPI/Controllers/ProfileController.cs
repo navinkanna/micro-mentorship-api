@@ -62,7 +62,8 @@ namespace MicroMentorshipAPI.Controllers
                 Location = profile.Location,
                 Headline = profile.Headline,
                 Bio = profile.Bio,
-                Topics = profile.Topics
+                Topics = profile.Topics,
+                HelpfulFeedbackCount = profile.HelpfulFeedbackCount
             };
         }
     }

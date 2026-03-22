@@ -31,11 +31,16 @@ namespace MicroMentorshipAPI.Services
 
         public string GenerateAccessToken(User user)
         {
-            var claims = new[]
+            var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, user.UserName),
-                new Claim(ClaimTypes.Role, user.Role)
+                new Claim(ClaimTypes.Name, user.UserName)
             };
+
+            if (!string.IsNullOrWhiteSpace(user.Role))
+            {
+                claims.Add(new Claim(ClaimTypes.Role, user.Role));
+            }
+
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_securityKey));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
             var expires = DateTime.UtcNow.AddMinutes(_accessTokenExpirationInMinutes);
