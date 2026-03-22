@@ -8,14 +8,29 @@ namespace MicroMentorshipAPI.Data
     {
         public AppDBContext CreateDbContext(string[] args)
         {
+            var environmentName =
+                Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ??
+                Environment.GetEnvironmentVariable("DOTNET_ENVIRONMENT") ??
+                "Development";
+
             var configuration = new ConfigurationBuilder()
-                .SetBasePath(AppContext.BaseDirectory)
+                .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json", optional: false)
+                .AddJsonFile($"appsettings.{environmentName}.json", optional: true)
+                .AddUserSecrets<AppDBContextFactory>(optional: true)
+                .AddEnvironmentVariables()
                 .Build();
 
+            var connectionString = configuration.GetConnectionString("postgreConnection");
+
+            if (string.IsNullOrWhiteSpace(connectionString))
+            {
+                throw new InvalidOperationException(
+                    "Missing connection string 'ConnectionStrings:postgreConnection' for EF Core design-time operations.");
+            }
+
             var optionsBuilder = new DbContextOptionsBuilder<AppDBContext>();
-            optionsBuilder.UseNpgsql(
-                configuration.GetConnectionString("postgreConnection"));
+            optionsBuilder.UseNpgsql(connectionString);
 
             return new AppDBContext(optionsBuilder.Options);
         }

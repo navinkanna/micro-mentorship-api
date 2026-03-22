@@ -5,6 +5,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MicroMentorshipAPI.Processors
 {
+    public enum RegisterResult
+    {
+        Success,
+        UserAlreadyExists,
+        Failed
+    }
+
     public class AuthorizeProcessor
     {
         private readonly AppDBContext _context;
@@ -54,23 +61,23 @@ namespace MicroMentorshipAPI.Processors
             return dbUser;
         }
 
-        internal async Task<bool> Register(User user)
+        internal async Task<RegisterResult> Register(User user)
         {
             var existingUser = await _context.Users.AnyAsync(u => u.UserName == user.UserName);
 
             if (existingUser)
             {
-                return false;
+                return RegisterResult.UserAlreadyExists;
             }
 
             user.Password = _passwordHasher.HashPassword(user, user.Password);
             _context.Users.Add(user);
             var result = await _context.SaveChangesAsync();
             if (result <= 0)
-                return false;
+                return RegisterResult.Failed;
 
             await _profileProcessor.CreateInitialProfile(user.Id, user.Role);
-            return true;
+            return RegisterResult.Success;
         }
 
         internal async Task<User?> GetUserById(int userId)
