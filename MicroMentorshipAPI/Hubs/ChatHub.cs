@@ -212,6 +212,7 @@ namespace MicroMentorshipAPI.Hubs
                 profile.Expertise ?? string.Empty,
                 profile.Industry ?? string.Empty,
                 profile.Topics ?? string.Empty,
+                profile.HelpfulFeedbackCount,
                 Context.ConnectionId);
         }
 
@@ -269,7 +270,8 @@ namespace MicroMentorshipAPI.Hubs
                 Headline = user.Headline,
                 Expertise = user.Expertise,
                 Industry = user.Industry,
-                Topics = user.Topics
+                Topics = user.Topics,
+                HelpfulFeedbackCount = user.HelpfulFeedbackCount
             };
         }
 

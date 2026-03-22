@@ -16,5 +16,6 @@ namespace MicroMentorshipAPI.Models
         public string? Headline { get; set; }
         public string? Bio { get; set; }
         public string? Topics { get; set; }
+        public int HelpfulFeedbackCount { get; set; }
     }
 }

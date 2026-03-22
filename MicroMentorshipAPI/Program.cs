@@ -34,6 +34,7 @@ builder.Services.AddScoped<TokenService>();
 builder.Services.AddScoped<AuthorizeProcessor>();
 builder.Services.AddScoped<ProfileProcessor>();
 builder.Services.AddScoped<ChatHistoryProcessor>();
+builder.Services.AddScoped<ChatFeedbackProcessor>();
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 builder.Services.AddSingleton<ChatMatchService>();
 

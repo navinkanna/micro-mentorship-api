@@ -184,6 +184,7 @@ namespace MicroMentorshipAPI.Services
         string Expertise,
         string Industry,
         string Topics,
+        int HelpfulFeedbackCount,
         string ConnectionId);
 
     public record ActiveSessionState(int SessionId, QueuedUser Mentor, QueuedUser Mentee)
