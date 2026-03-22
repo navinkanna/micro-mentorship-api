@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using MicroMentorshipAPI.Data;
 using MicroMentorshipAPI.Models;
+using MicroMentorshipAPI.Processors;
 using MicroMentorshipAPI.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
@@ -13,11 +14,16 @@ namespace MicroMentorshipAPI.Hubs
     {
         private readonly AppDBContext _context;
         private readonly ChatMatchService _chatMatchService;
+        private readonly ChatHistoryProcessor _chatHistoryProcessor;
 
-        public ChatHub(AppDBContext context, ChatMatchService chatMatchService)
+        public ChatHub(
+            AppDBContext context,
+            ChatMatchService chatMatchService,
+            ChatHistoryProcessor chatHistoryProcessor)
         {
             _context = context;
             _chatMatchService = chatMatchService;
+            _chatHistoryProcessor = chatHistoryProcessor;
         }
 
         public override async Task OnConnectedAsync()
@@ -247,6 +253,7 @@ namespace MicroMentorshipAPI.Hubs
             session.Status = "ended";
             session.EndedAtUtc = DateTime.UtcNow;
             await _context.SaveChangesAsync();
+            await _chatHistoryProcessor.CleanupExpiredEndedChatsAsync();
         }
 
         private static ChatParticipantModel ToParticipantModel(QueuedUser user)

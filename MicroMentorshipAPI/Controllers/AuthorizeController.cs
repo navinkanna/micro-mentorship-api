@@ -22,9 +22,17 @@ namespace MicroMentorshipAPI.Controllers
         public async Task<IActionResult> Register(User user)
         {
             var result = await _authorizeProcessor.Register(user);
-            if (result)
+            if (result == RegisterResult.Success)
+            {
                 return Ok("User Registered");
-            return BadRequest(result);
+            }
+
+            if (result == RegisterResult.UserAlreadyExists)
+            {
+                return Conflict("An account with this email already exists.");
+            }
+
+            return BadRequest("Could not create account.");
         }
 
         [HttpPost("login")]
