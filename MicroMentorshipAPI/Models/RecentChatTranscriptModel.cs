@@ -7,6 +7,8 @@ namespace MicroMentorshipAPI.Models
         public string PartnerUserName { get; set; } = string.Empty;
         public string PartnerRole { get; set; } = string.Empty;
         public string PartnerAvatarId { get; set; } = string.Empty;
+        public string PartnerAvatarMode { get; set; } = "illustration";
+        public string? PartnerProfilePhotoUrl { get; set; }
         public string PartnerFirstName { get; set; } = string.Empty;
         public string PartnerLastName { get; set; } = string.Empty;
         public string PartnerHeadline { get; set; } = string.Empty;

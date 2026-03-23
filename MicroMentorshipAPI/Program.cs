@@ -35,6 +35,8 @@ builder.Services.AddScoped<AuthorizeProcessor>();
 builder.Services.AddScoped<ProfileProcessor>();
 builder.Services.AddScoped<ChatHistoryProcessor>();
 builder.Services.AddScoped<ChatFeedbackProcessor>();
+builder.Services.AddHttpClient<LinkedInAuthService>();
+builder.Services.AddScoped<LinkedInAuthService>();
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 builder.Services.AddSingleton<ChatMatchService>();
 

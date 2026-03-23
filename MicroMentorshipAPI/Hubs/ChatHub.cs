@@ -206,6 +206,11 @@ namespace MicroMentorshipAPI.Hubs
                 user.UserName,
                 profile.Role ?? user.Role ?? string.Empty,
                 string.IsNullOrWhiteSpace(profile.AvatarId) ? "sprout" : profile.AvatarId,
+                string.Equals(profile.AvatarMode, "photo", StringComparison.OrdinalIgnoreCase) &&
+                    !string.IsNullOrWhiteSpace(profile.ProfilePhotoUrl)
+                    ? "photo"
+                    : "illustration",
+                string.IsNullOrWhiteSpace(profile.ProfilePhotoUrl) ? null : profile.ProfilePhotoUrl,
                 profile.FirstName ?? string.Empty,
                 profile.LastName ?? string.Empty,
                 profile.Headline ?? string.Empty,
@@ -265,6 +270,8 @@ namespace MicroMentorshipAPI.Hubs
                 UserName = user.UserName,
                 Role = user.Role,
                 AvatarId = user.AvatarId,
+                AvatarMode = user.AvatarMode,
+                ProfilePhotoUrl = user.ProfilePhotoUrl,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 Headline = user.Headline,

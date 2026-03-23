@@ -5,6 +5,8 @@ namespace MicroMentorshipAPI.Models
         public int Id { get; set; }
         public int UserId { get; set; }
         public string? AvatarId { get; set; }
+        public string? AvatarMode { get; set; }
+        public string? ProfilePhotoUrl { get; set; }
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
         public string? Role { get; set; }

@@ -178,6 +178,8 @@ namespace MicroMentorshipAPI.Services
         string UserName,
         string Role,
         string AvatarId,
+        string AvatarMode,
+        string? ProfilePhotoUrl,
         string FirstName,
         string LastName,
         string Headline,

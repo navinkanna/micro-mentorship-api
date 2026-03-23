@@ -77,6 +77,14 @@ namespace MicroMentorshipAPI.Processors
                     PartnerUserName = partnerUser?.UserName ?? string.Empty,
                     PartnerRole = partnerProfile?.Role ?? partnerUser?.Role ?? string.Empty,
                     PartnerAvatarId = string.IsNullOrWhiteSpace(partnerProfile?.AvatarId) ? "sprout" : partnerProfile.AvatarId!,
+                    PartnerAvatarMode =
+                        string.Equals(partnerProfile?.AvatarMode, "photo", StringComparison.OrdinalIgnoreCase) &&
+                        !string.IsNullOrWhiteSpace(partnerProfile?.ProfilePhotoUrl)
+                            ? "photo"
+                            : "illustration",
+                    PartnerProfilePhotoUrl = string.IsNullOrWhiteSpace(partnerProfile?.ProfilePhotoUrl)
+                        ? null
+                        : partnerProfile!.ProfilePhotoUrl,
                     PartnerFirstName = partnerProfile?.FirstName ?? string.Empty,
                     PartnerLastName = partnerProfile?.LastName ?? string.Empty,
                     PartnerHeadline = partnerProfile?.Headline ?? string.Empty,
@@ -183,6 +191,14 @@ namespace MicroMentorshipAPI.Processors
                 PartnerUserName = partnerUser?.UserName ?? string.Empty,
                 PartnerRole = partnerProfile?.Role ?? partnerUser?.Role ?? string.Empty,
                 PartnerAvatarId = string.IsNullOrWhiteSpace(partnerProfile?.AvatarId) ? "sprout" : partnerProfile.AvatarId!,
+                PartnerAvatarMode =
+                    string.Equals(partnerProfile?.AvatarMode, "photo", StringComparison.OrdinalIgnoreCase) &&
+                    !string.IsNullOrWhiteSpace(partnerProfile?.ProfilePhotoUrl)
+                        ? "photo"
+                        : "illustration",
+                PartnerProfilePhotoUrl = string.IsNullOrWhiteSpace(partnerProfile?.ProfilePhotoUrl)
+                    ? null
+                    : partnerProfile!.ProfilePhotoUrl,
                 PartnerFirstName = partnerProfile?.FirstName ?? string.Empty,
                 PartnerLastName = partnerProfile?.LastName ?? string.Empty,
                 PartnerHeadline = partnerProfile?.Headline ?? string.Empty,

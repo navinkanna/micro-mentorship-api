@@ -66,7 +66,8 @@ namespace MicroMentorshipAPI.Processors
             {
                 UserId = userId,
                 Role = role,
-                AvatarId = "sprout"
+                AvatarId = "sprout",
+                AvatarMode = "illustration"
             };
 
             _context.Profiles.Add(profile);
@@ -76,6 +77,10 @@ namespace MicroMentorshipAPI.Processors
         private static void ApplyModel(Profile profile, ProfileModel profileModel)
         {
             profile.AvatarId = string.IsNullOrWhiteSpace(profileModel.AvatarId) ? "sprout" : profileModel.AvatarId;
+            profile.AvatarMode = NormalizeAvatarMode(profileModel.AvatarMode, profileModel.ProfilePhotoUrl);
+            profile.ProfilePhotoUrl = string.IsNullOrWhiteSpace(profileModel.ProfilePhotoUrl)
+                ? null
+                : profileModel.ProfilePhotoUrl.Trim();
             profile.FirstName = profileModel.FirstName;
             profile.LastName = profileModel.LastName;
             profile.Role = profileModel.Role;
@@ -87,6 +92,18 @@ namespace MicroMentorshipAPI.Processors
             profile.Headline = profileModel.Headline;
             profile.Bio = profileModel.Bio;
             profile.Topics = profileModel.Topics;
+        }
+
+        private static string NormalizeAvatarMode(string? avatarMode, string? profilePhotoUrl)
+        {
+            var normalizedMode = avatarMode?.Trim().ToLowerInvariant();
+
+            if (normalizedMode == "photo" && !string.IsNullOrWhiteSpace(profilePhotoUrl))
+            {
+                return "photo";
+            }
+
+            return "illustration";
         }
     }
 }
