@@ -84,5 +84,80 @@ namespace MicroMentorshipAPI.Processors
         {
             return await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
         }
+
+        internal async Task<User?> LoginWithLinkedIn(
+            LinkedInUserInfoResponse linkedInUser,
+            string? requestedRole)
+        {
+            var userName = GetLinkedInUserName(linkedInUser);
+
+            var dbUser = await _context.Users.FirstOrDefaultAsync(u => u.UserName == userName);
+
+            if (dbUser == null)
+            {
+                dbUser = new User
+                {
+                    UserName = userName,
+                    Password = _passwordHasher.HashPassword(
+                        new User { UserName = userName },
+                        $"{Guid.NewGuid():N}{Guid.NewGuid():N}!Aa1"),
+                    Role = null
+                };
+
+                _context.Users.Add(dbUser);
+                var result = await _context.SaveChangesAsync();
+
+                if (result <= 0)
+                {
+                    return null;
+                }
+
+                await _profileProcessor.CreateInitialProfile(dbUser.Id, dbUser.Role);
+            }
+
+            await PopulateProfileFromLinkedIn(dbUser, linkedInUser);
+            return dbUser;
+        }
+
+        private async Task PopulateProfileFromLinkedIn(User user, LinkedInUserInfoResponse linkedInUser)
+        {
+            var profile = await _context.Profiles.FirstOrDefaultAsync(p => p.UserId == user.Id);
+            if (profile == null)
+            {
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(profile.FirstName) && !string.IsNullOrWhiteSpace(linkedInUser.GivenName))
+            {
+                profile.FirstName = linkedInUser.GivenName;
+            }
+
+            if (string.IsNullOrWhiteSpace(profile.LastName) && !string.IsNullOrWhiteSpace(linkedInUser.FamilyName))
+            {
+                profile.LastName = linkedInUser.FamilyName;
+            }
+
+            if (!string.IsNullOrWhiteSpace(linkedInUser.Picture))
+            {
+                profile.ProfilePhotoUrl = linkedInUser.Picture;
+            }
+
+            if (string.IsNullOrWhiteSpace(profile.AvatarMode))
+            {
+                profile.AvatarMode = "illustration";
+            }
+
+            await _context.SaveChangesAsync();
+        }
+
+        private static string GetLinkedInUserName(LinkedInUserInfoResponse linkedInUser)
+        {
+            if (!string.IsNullOrWhiteSpace(linkedInUser.Email))
+            {
+                return linkedInUser.Email.Trim().ToLowerInvariant();
+            }
+
+            return $"linkedin-{linkedInUser.Subject}@users.micromentor.invalid";
+        }
     }
 }

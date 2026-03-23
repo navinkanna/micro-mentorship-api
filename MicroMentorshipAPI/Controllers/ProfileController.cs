@@ -52,6 +52,8 @@ namespace MicroMentorshipAPI.Controllers
             return new ProfileModel
             {
                 AvatarId = profile.AvatarId,
+                AvatarMode = profile.AvatarMode,
+                ProfilePhotoUrl = profile.ProfilePhotoUrl,
                 FirstName = profile.FirstName,
                 LastName = profile.LastName,
                 Role = profile.Role,
